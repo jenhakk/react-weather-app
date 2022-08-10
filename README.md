@@ -6,16 +6,16 @@
 
 ## 1. Creating React project
 
-To create React applications you need to have node.js, npm (Node Package Manager) and code editor installed. 
+To create React applications you need to have **node.js**, **npm (Node Package Manager)** and **code editor** installed. 
 Check the basics of React and how to set up required tools from [here.](https://github.com/jenhakk/React.js_Fundamentals) 
 
-After installations, start by opening your chosen code editor. In this project I’m using Visual Studio Code. 
+After installations, start by opening your chosen code editor. In this project I’m using **Visual Studio Code**. 
 Open folder/workspace where you want to create your application. 
 Then open a new terminal and create a new React project by typing next command to it:
 
 `npx create-react-app weatherapp`
 
-This creates a new folder that is named according to the project name. Then move to project folder and start the project by typing:
+This creates a new folder that is named according to the project name. Then move to project:
 
 `cd weatherapp`
 
@@ -27,8 +27,8 @@ This opens project to browser in the port 3000.
 
 ![image](https://user-images.githubusercontent.com/75015030/183838655-3590252e-f658-4055-b4c2-cb1397ebc285.png)
 
-Open **App.js** file from the editor and delete everything from the first div element in the return statement. 
-Also delete the logo import line and the actual logo from the src folder. Add imports for React and UseState Hook. Now your editor should look like this:
+Open **App.js** file from the editor and delete everything **from the first div element in the return statement**. 
+Also delete the **logo import line** and the actual logo from the `src` folder. Add imports for **React** and **UseState Hook**. Now your editor should look like this:
 
 ![image](https://user-images.githubusercontent.com/75015030/183836672-41e08cfd-e54b-40fe-b3fe-8939c4495d0d.png)
 
@@ -44,12 +44,13 @@ Click **My Apps** and create a new App by clicking **“Add a new App”**. Fill
 
 ![image](https://user-images.githubusercontent.com/75015030/183838994-fee1b10b-6e31-4868-b502-2c67667a0471.png)
 
-Now you can find your application in My Apps. Click the created App and save your API Key for later use.  
+Now you can find your application in **My Apps**. Click the created App and save your **API Key** for later use.  
+
 *Note! You can only have one application at a time and the free version allows you to make up to 50 requests per day.*
 
 From **API Reference** link you can find all the different APIs that you can use. In this project we will use **Locations API** (City Search) and **Current Conditions API** (Current Conditions).
 
-It’s not good to have the key coded in the same file where you use it, so create a new file for the key and url’s in the `src` folder called `constants.js`. Make variables for the `apikey` and urls for `citysearch` and `current` without the part of api key and location key, these will be added in the actual code. Then export these so you can use them in the **App.js**. 
+It’s not good to have the key coded in the same file where you use it, so create a new file for the key and url’s in the `src` folder called `constants.js`. Make variables for the `apikey` and urls `citysearch` and `current` **without** the part of api key and location key, these will be added in the actual code. Then export these so you can use them in the **App.js**. 
 
 ![image](https://user-images.githubusercontent.com/75015030/183840118-bd7d21fd-10af-40a0-a3bd-c7f6c3eb2a2e.png)
 
@@ -59,7 +60,7 @@ Import these in **App.js**:
 
 ## 3. Search field
 
-We want to have a search field for user to type the city they want to check the current weather. When user presses Enter, `search` event invokes and with fetch we get city’s **location key** from AccuWeather APi. Then that location key is being used in next fetch to get current conditions of that city.
+We want to have a search field for the user to type the city they want to check the current weather. When user presses **Enter**, `search` event invokes and with `fetch` we get city’s **location key** from AccuWeather APi. Then that location key is being used in next fetch to get **current conditions** of that city.
 
 Let’s create all necessary states inside function App:
 
@@ -105,7 +106,7 @@ const search = (evt) => {
 };
 ```
 
-If the pressed key is **Enter** then code will execute the **fetch**. We will use the variables from the `constants.js` and previously saved `city` state in the fetched url. **Result** is changed in the **JSON** form. Information we need is in the **object's first index (0)** and we can save them to `details` state with `setDetails` for later use. We are printing the location key with `console.log` to be sure that we actually get the key.
+If the pressed key is **Enter** then code will execute the **fetch**. We will use the variables from the `constants.js` and previously saved `city` state in the fetched url. **Result** is changed into **JSON** form. Information we need is in the **object's first index (0)** and we can save them to `details` state with `setDetails` for later use. We are printing the location key with `console.log` to be sure that we actually get the key.
 
 ![image](https://user-images.githubusercontent.com/75015030/183843546-ca8cd7a6-de80-4528-b217-0ba4b4f6dccd.png)
 
@@ -159,7 +160,7 @@ In the browser:
 
 Now all the information are just hard-coded, so let’s display the actual data we fetched.
 
-We can display data with **JSX** (curly brackets). We got the cityname and country from the first fetch (City Search), we just have to know the right keywords to get them. You can find those from **AccuWeather’s API Reference documentation**. For the cityname we use `LocalizedName` and for the country `Country.LocalizedName`. Since we saved then in `details` state we just have to use it front of them.
+We can display data with **JSX** (curly brackets). We got the cityname and country from the first fetch (City Search), we just have to know the right keywords to get them. You can find those from **AccuWeather’s API Reference documentation**. For the cityname we use `LocalizedName` and for the country `Country.LocalizedName`. Since we saved them in `details` state we just have to use it front of them.
 
 ```
 <div>
@@ -171,7 +172,7 @@ We can display data with **JSX** (curly brackets). We got the cityname and count
 </div>
 ```
 
-Now when you check the browser, you can see that there is only a blank page. That’s because we haven’t fetched anything yet, so the properties of the `details` are "undefined". We have to make some changes for the code to check if the fetch has been made.
+Now if you check the browser, you can see that there is only a blank page. That’s because we haven’t fetched anything yet, so the properties of the `details` are "undefined". We have to make some changes for the code to check if the fetch has been made.
 
 We add some **if-else** sentence for the `<div>` to see if details property **Key** is not "undefined". If sentence is **true** (`details.Key` is defined), the page shows everything inside the `<div>`. If **false** then page only renders empty space but the page itself doesn’t crash.
 
@@ -506,7 +507,7 @@ Lastly, I wanted to add **a light gray background when data is displayed** so it
 
 ![image](https://user-images.githubusercontent.com/75015030/183861518-4a2e267d-6bda-4993-8158-524187a8c043.png)
 
-So I made one more `<div>` called `box` that contains all texts when it is visible. 
+So I added some CSS for the div `box` that contains all texts when it is visible. 
 
 ```
 .box {
@@ -525,7 +526,7 @@ This needed some changes in `App.js` to work correctly. I added **div below main
 <main>
    <div className={typeof weather.WeatherText != "undefined" ? "box" : ""}>
 ```
-*Remember to add the ending tag in the end before end of main tag.*
+*Note! Remember to add the ending tag in the end before end of main tag.*
 
 **Before fetch:**
 
