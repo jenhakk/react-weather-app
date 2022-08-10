@@ -1,6 +1,6 @@
 # [React weather application](https://jenhakk.github.io/react-weather-app/)
 
-*Creator: [Jenna Hakkarainen](https://github.com/jenhakk)*
+**Creator: [Jenna Hakkarainen](https://github.com/jenhakk)**
 
 ![image](https://user-images.githubusercontent.com/75015030/183864544-a2a1fb2b-cf59-4993-bd89-6779ad309ca3.png)
 
