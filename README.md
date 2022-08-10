@@ -1,5 +1,7 @@
 # [React weather application](https://jenhakk.github.io/react-weather-app/)
 
+![image](https://user-images.githubusercontent.com/75015030/183864544-a2a1fb2b-cf59-4993-bd89-6779ad309ca3.png)
+
 ### This is a step-by-step guide on how to build a simple weather application with React using AccuWeather API. You should have some basic knowledge of web development, such as HTML and CSS.
 
 ## 1. Creating React project
