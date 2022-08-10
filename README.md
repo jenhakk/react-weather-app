@@ -111,7 +111,7 @@ Next we continue with another fetch to get **current conditions**. Now we use th
  
 Here is the whole search function:
 
-```
+<pre>
 const search = (evt) => {
     if (evt.key === "Enter") {
       fetch(`${citysearch}cities/search?apikey=${apikey}&q=${city}`)
@@ -120,7 +120,7 @@ const search = (evt) => {
           console.log(result[0].Key);
           setDetails(result[0]);
 
-          fetch(`${current}${result[0].Key}?apikey=${apikey}`)
+          <b>fetch(`${current}${result[0].Key}?apikey=${apikey}`)
             .then((res) => res.json())
             .then((result) => {
               setWeather(result[0]);
@@ -128,11 +128,11 @@ const search = (evt) => {
             })
             .catch((err) => {
               console.error(err);
-            });
+            });</b>
         });
     }
 };
-```
+</pre>
 
 Fetched data in the console:
 
@@ -175,6 +175,7 @@ We add some **if-else** sentence for the `<div>` to see if details property **Ke
 
 ```
 {typeof details.Key != "undefined" ? (
+
   <div>
     <div className="location">
       <div className="cityname">{details.LocalizedName}, {details.Country.LocalizedName}</div>
@@ -182,6 +183,7 @@ We add some **if-else** sentence for the `<div>` to see if details property **Ke
       <div className="time">13:13:00</div>
     </div>
   </div>
+  
 ) : (" ")}
 ```
 
@@ -219,7 +221,7 @@ Now let’s do the same with `weather div`. Now the data we want to display is f
  
 There are multiple ways to get date and time in Javascript but here I have made my own `Datebuilder` function for date and `getTime` function for time. They use Javascript [Date object’s](https://www.w3schools.com/jsref/jsref_obj_date.asp) methods. 
 
-### dateBuilder
+### dateBuilder()
 
 We create lists for **month names** and **weekday names** so instead of just getting numbers we can get name of current day and month. We also want to display **day number** and **full year** so we save all those in different variables and then return them.
 
@@ -259,7 +261,7 @@ const dateBuilder = (d) => {
 };
 ```
 
-### getTime
+### getTime()
 
 We create one variable `time` that contains **hours**, **minutes** and **seconds** that are separated with `:` . In the end we return `time` variable.
 
@@ -285,15 +287,263 @@ When displaying date and time, we only have to call functions inside curly brack
    </div>
 ) : (" ")}
 ```
- 
- 
+
+**Browser:**
+
+![image](https://user-images.githubusercontent.com/75015030/183852792-d4575099-bcaf-4fc9-a406-5803fb717302.png)
+
+## 7. Icons
+
+In AccuWeather’s API page you can find numbered [icons for different weathers](https://developer.accuweather.com/weather-icons). You can’t make requests for that page, but when fetching **Current Conditions**, the result shows **WeatherIcon number**. I created a new folder, `icons`, in `public` folder where I saved all the icons and named them with number that equals the one found on the website, e.g. **1.png, 2.png..**. This is a bit of hard work and is not mandatory if you don’t want to use icons on in your application.
+
+![image](https://user-images.githubusercontent.com/75015030/183853278-1929b913-f879-40ed-990b-cf59a48f666a.png)
+
+To use these icons, we have to make a new state for the icon’s source `iconSrc`. It is set in the second fetch with the **folder path**, result’s **WeatherIcon number** and ended with **.png**.
+
+<pre>
+function App() {
+  const [city, setCity] = useState("");
+  const [details, setDetails] = useState({});
+  const [weather, setWeather] = useState({});
+  <b>const [iconSrc, setIconSrc] = useState("");</b>
+
+  const search = (evt) => {
+    if (evt.key === "Enter") {
+      fetch(`${citysearch}cities/search?apikey=${apikey}&q=${city}`)
+        .then((res) => res.json())
+        .then((result) => {
+          console.log(result[0].Key);
+          setDetails(result[0]);
+
+          fetch(`${current}${result[0].Key}?apikey=${apikey}`)
+            .then((res) => res.json())
+            .then((result) => {
+              setWeather(result[0]);
+              <b>setIconSrc(`/icons/${result[0].WeatherIcon}.png`);
+              console.log(result[0].WeatherIcon);</b>
+              console.log(result[0]);
+            })
+            .catch((err) => {
+              console.error(err);
+            });
+        });
+    }
+};
+</pre>
+
+  
+Now we can use only `{iconSrc}`as the source when displaying the icon.
+
+```
+<div className="icon-box">
+    <img className="icon" src={iconSrc} alt="weathericon" />
+</div>
+```
+
+![image](https://user-images.githubusercontent.com/75015030/183858274-46fac44d-302d-493b-a296-cef2e87c590d.png)
 
 
+## 8. Changing backgrounds
+
+Last thing before touching CSS, I wanted to add few backgrounds that change depending on temperature or if it’s day or night. I searched suitable images from [pixabay](https://pixabay.com/) and added them to same folder with the icons. I wanted to display summer scene as default and if it’s daytime or temperature is over 0. If on the other hand it’s nighttime, a night scene is shown, and if temperature is below 0 then a nice snowy scene is displayed.
+
+![image](https://user-images.githubusercontent.com/75015030/183858691-4a023cca-721f-45c8-a0b1-8c86b1abc841.png)
+
+**Default summer scene:**
+
+![image](https://user-images.githubusercontent.com/75015030/183858752-f39d13e7-fb29-4ac0-8603-06d9f51ccd48.png)
+
+**Night scene:**
+
+![image](https://user-images.githubusercontent.com/75015030/183858897-148e569f-f5ba-4ee2-889c-5e1770ba3659.png)
 
 
+**Winter scene:**
+
+![image](https://user-images.githubusercontent.com/75015030/183858963-e2e84112-29d9-434f-9a2e-82e000c79b47.png)
 
 
+Now let’s move on to modifying `App.css`.
 
+When project is created it automatically adds **two css files**: `App.css` and `index.css`. We use `App.css` in this project since we only use one component. Open `App.css` and delete all default settings.
+
+For the changing background, I created three different versions of `App` class. Only difference between them is the background-image.
+
+```
+.App {
+  background-image: url('/public/icons/summerday.png');
+  background-size: inherit;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.App.night {
+  background-image: url('/public/icons/night.png');
+}
+
+.App.winter {
+  background-image: url('/public/icons/winterday.jpg');
+}
+```
+
+**You can see the default summer scene now in the browser:**
+
+![image](https://user-images.githubusercontent.com/75015030/183859657-12033491-424c-43f0-90d3-95e34f3f42bd.png)
+
+Now since we want to have changing background, we have to do some modifications to `App.js`. We add similar if-else sentence as before but a bit more complex version to the first `div` element named `App`. 
+
+![image](https://user-images.githubusercontent.com/75015030/183860453-95a36d51-4e13-477e-bbb7-5c2ca8a04dd5.png)
+
+
+**Line 77**: First we have to check if we have fetched anything, if not then we just jump straight to **line 83** and show the default image.
+
+**Line 78**: If we have fetched, then check if it’s daytime (this information can also be found from the second fetch result). If not then move to **line 82** and show the night image.
+
+**Line 79**: If it is indeed daytime then check if temperature is **below 0**, if true move to **line 80** and show winter image and if not then move to **line 81** and show the default image of summer.
+
+We can check if program works right by changing the temperature check mark for **greater than 0**, so the winter image is displayed:
+
+![image](https://user-images.githubusercontent.com/75015030/183860499-cab1e12f-9df6-4880-bd6e-793ce8e135ed.png)
+
+Daytime is harder to test since our application only works in Finland and can’t then make search for example some city in other side of the world where it actually is night. But I have tested that also by staying up late and running the code at night :D
+
+
+## 9. Rest of the CSS
+
+I’ve added some basic values for margins, paddings, elements heights and widths etc. I’m not going to go through these in very detail since it’s only for the visual part and doesn’t affect functionality. I wanted all **texts** to be white and have some shadow to get some contrast and get that app look. 
+
+```
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+main {
+  padding: 50px;
+  min-height: 100vh;
+}
+
+.top-box .header {
+  color: #FFF;
+  font-size: 60px;
+  font-weight: 500;
+  text-align: center;
+  text-shadow: 2px 2px rgba(50, 50, 70, 0.5);
+  padding: 25px;
+  padding-bottom: 30px;
+}
+
+.top-box .start {
+  color: #FFF;
+  font-size: 25px;
+  font-weight: 500;
+  text-align: center;
+  text-shadow: 2px 2px rgba(50, 50, 70, 0.5);
+  padding: 25px;
+  padding-bottom: 15px;
+}
+```
+
+For the **search field** I added bit transparency and set some default values to **none**, e.g. border. I also added some shadow and rounded the corners.
+
+```
+.search {
+  width: 100%;
+  margin: 0 0 75px;
+}
+
+.search .search-field {
+  display: block;
+  margin: 0 auto;
+  width: 30%;
+  padding: 15px;
+
+  appearance: none;
+  border: none;
+  outline: none;
+
+  background-color: rgb(255, 255, 255, 0.9);
+  border-radius: 10px 10px 10px 10px;
+  box-shadow: 0px 5px rgba(0, 0, 0, 0.2);
+
+  color: #313131;
+  font-size: 20px;
+}
+```
+
+I wanted to display **temperature** in an own box so it stands out better from the background so I added background-color with transparency and displayed it in inline-block so the box only contains the numbers and doesn’t stretch to whole page wide. 
+
+```
+.weather {
+  text-align: center;
+}
+
+.weather .temperature {
+  position: relative;
+  display: inline-block;
+  margin: 30px auto;
+  background-color: rgba(255, 255, 255, 0.3);
+  padding: 15px 25px;
+
+  color: #FFF;
+  font-size: 100px;
+  font-weight: 900;
+
+  text-shadow: 3px 6px rgba(29, 29, 34, 0.7);
+  text-align: center;
+  box-shadow: 3px 6px rgba(0, 0, 0, 0.2);
+}
+```
+
+Lastly, I wanted to add **a light gray background when data is displayed** so it stands out from all backgrounds. The winter image is quite white, so it’s a bit hard to read all texts.
+
+![image](https://user-images.githubusercontent.com/75015030/183861518-4a2e267d-6bda-4993-8158-524187a8c043.png)
+
+So I made one more `<div>` called `box` that contains all texts when it is visible. 
+
+```
+.box {
+  position: relative;
+  margin: auto;
+  width: 70%;
+  height: 90%;
+  border-radius: 10px 10px 10px 10px;
+  background-color: rgba(160, 160, 160, 0.15);
+}
+```
+
+This needed some changes in `App.js` to work correctly. I added **div below main tag** and made again if-else sentence. It checks if fetch has been made and if so, it shows the box. If not, then the box doesn’t show.
+
+```
+<main>
+   <div className={typeof weather.WeatherText != "undefined" ? "box" : ""}>
+```
+*Remember to add the ending tag in the end before end of main tag.*
+
+**Before fetch:**
+
+![image](https://user-images.githubusercontent.com/75015030/183862214-de92e28e-1c35-4e02-94a0-d087f46da87f.png)
+
+**After fetch:**
+
+![image](https://user-images.githubusercontent.com/75015030/183862372-ff6b9a27-f7a1-4e7d-9c13-53f7993cf151.png)
+
+
+That's it! Now your application is ready for use.
+
+*Note! Now the application only runs on your local device. I have deployed my weather app to GitHub pages and it requires some changes in the program. If you wish to do the same, you can follow instruction from [here](https://github.com/gitname/react-gh-pages). You also have to change code and use environment variable for the icons since program can’t find them anymore. [Here](https://create-react-app.dev/docs/using-the-public-folder/) is some more info about that.*
+
+The changed code looks like this:
+
+`<img className="icon" src={process.env.PUBLIC_URL + iconSrc} alt="weathericon" />`
+
+
+### Check my [weather application]() and [full codes]()
 
 
 
