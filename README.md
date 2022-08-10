@@ -543,7 +543,7 @@ The changed code looks like this:
 `<img className="icon" src={process.env.PUBLIC_URL + iconSrc} alt="weathericon" />`
 
 
-### Check my [weather application](https://jenhakk.github.io/react-weather-app/) and [full codes]()
+### Check my [weather application](https://jenhakk.github.io/react-weather-app/) and [full codes](https://github.com/jenhakk/react-weather-app/tree/master)
 
 
 
